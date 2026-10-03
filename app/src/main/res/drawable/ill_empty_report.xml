@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  汇总页空状态插画：单色连续线稿（三根柱 + 基线）+ 一个 offset 的靛蓝圆形。
+  线宽 4 / 256，按 96dp 展示时正好是 1.5dp。
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="96dp"
+    android:height="96dp"
+    android:viewportWidth="256"
+    android:viewportHeight="256">
+
+    <!-- offset 几何形：靛蓝 #E1F3FE -->
+    <path
+        android:fillColor="#FFE1F3FE"
+        android:pathData="M196,44m-30,0a30,30 0,1 1,60 0a30,30 0,1 1,-60 0" />
+
+    <!-- 三根柱 -->
+    <path
+        android:strokeColor="#FF111111"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:pathData="M84,190V124" />
+    <path
+        android:strokeColor="#FF111111"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:pathData="M128,190V92" />
+    <path
+        android:strokeColor="#FF111111"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:pathData="M172,190V146" />
+
+    <!-- 基线 -->
+    <path
+        android:strokeColor="#FF111111"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:pathData="M56,190h144" />
+</vector>

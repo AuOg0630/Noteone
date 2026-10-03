@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  账单模块（B）的字符串。前缀 ledger_*。
+  与 strings_record.xml 同理：新建独立文件，不动 A 的 values/strings.xml。
+-->
+<resources>
+
+    <!-- 顶部栏 -->
+    <string name="ledger_prev_month">上个月</string>
+    <string name="ledger_next_month">下个月</string>
+    <string name="ledger_open_month_picker">选择月份</string>
+    <string name="ledger_search">搜索</string>
+    <string name="ledger_search_hint">备注关键词或金额区间，如 10–50</string>
+    <string name="ledger_search_close">退出搜索</string>
+
+    <!-- 筛选 -->
+    <string name="ledger_filter_all">全部</string>
+
+    <!-- 列表 -->
+    <string name="ledger_delete">删除</string>
+    <string name="ledger_deleted">已删除</string>
+    <string name="ledger_empty_month">本月还没有记录</string>
+    <string name="ledger_empty_search">没有匹配的记录</string>
+
+    <!-- 编辑面板 -->
+    <string name="ledger_edit_title">编辑记录</string>
+    <string name="ledger_edit_datetime">日期时间</string>
+    <string name="ledger_save">保存</string>
+
+    <!-- 日期选择器 -->
+    <string name="ledger_date_picker_title">选择日期</string>
+    <string name="ledger_date_picker_confirm">确定</string>
+    <string name="ledger_cancel">取消</string>
+    <string name="ledger_date_year">年</string>
+    <string name="ledger_date_month">月</string>
+    <string name="ledger_date_day">日</string>
+
+    <!-- 月份选择器 -->
+    <string name="ledger_month_picker_title">选择月份</string>
+    <string name="ledger_prev_year">上一年</string>
+    <string name="ledger_next_year">下一年</string>
+    <string name="ledger_year_format">%1$d 年</string>
+    <string name="ledger_month_format">%1$d 月</string>
+</resources>

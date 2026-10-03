@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      仅浅色模式。不做深色主题，因此不使用 values-night。
+      基础主题直接用平台 Light 主题，避免为 Compose 项目引入 AppCompat / Material 组件库。
+      状态栏透明 + 深色图标，内容由 Compose 自绘（AppTheme）。
+    -->
+    <style name="Theme.Noteone" parent="@android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/common_canvas</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@color/common_canvas</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:colorAccent">@color/common_ink</item>
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
+
+    <!--
+      QuickEntryActivity 专用（D 模块）。三个要点，缺一个就会露白底把下面的 App 盖住：
+      1. windowBackground 透明 + windowIsTranslucent：底下就是用户正在看的第三方 App，
+         框选层必须能透出真实画面；
+      2. windowAnimationStyle @null：磁贴点开后不能有任何转场动画（要"无感"）；
+      3. backgroundDimEnabled false：不要系统那层变暗遮罩。
+      刻意不开 windowIsFloating：本项目所有悬浮内容都由 D 自己用 WindowManager 管理，
+      系统那层浮窗装饰会引入额外的内边距与阴影。
+    -->
+    <style name="Theme.Noteone.Transparent" parent="@android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+    </style>
+</resources>

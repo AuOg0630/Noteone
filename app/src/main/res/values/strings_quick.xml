@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  磁贴与屏幕识别模块（D）的字符串。前缀 quick_*。
+
+  和 B / C 一样**不改** values/strings.xml（那是 A 的文件），新建本文件由 AAPT
+  合并进同一个 R.string。公共动作文字（完成 / 支出 / 收入 / 返回）直接复用 common_*。
+
+  这里只放 D 自己的代码与 manifest / res-xml 真正引用到的字符串。
+  设置页（E）要用的那批文案（服务状态三态、后台保活、隐私说明、候选策略开关、
+  添加磁贴引导、从图片识别入口）在 `docs/M4_交付说明_D_磁贴与屏幕识别.md` 里
+  给出了可直接复制的 XML，E 用 settings_* 前缀加进自己的文件即可 ——
+  留在本文件里而没人引用，只会给 lint 添一堆 UnusedResources。
+-->
+<resources>
+
+    <!-- 无障碍服务（manifest 与 res/xml/accessibility_service_config.xml 引用） -->
+    <string name="quick_a11y_label">记一笔（屏幕识别）</string>
+    <string name="quick_a11y_description">读取当前屏幕画面，用于识别金额后快速记账。</string>
+    <string name="quick_a11y_summary">只读取画面，不读取窗口内容，不模拟点击</string>
+
+    <!-- 快捷设置磁贴 -->
+    <string name="quick_tile_label">记一笔</string>
+    <string name="quick_tile_subtitle_recognizing">识别中…</string>
+    <string name="quick_tile_subtitle_saved">已记 %1$s</string>
+
+    <!-- 桌面快捷方式（res/xml/shortcuts.xml 引用） -->
+    <string name="quick_shortcut_record_short">记一笔</string>
+    <string name="quick_shortcut_record_long">框选屏幕上的金额</string>
+    <string name="quick_shortcut_image_short">从图片记一笔</string>
+    <string name="quick_shortcut_image_long">选一张截图识别金额</string>
+
+    <!-- 框选层 -->
+    <string name="quick_hint_press_to_select">按住拖动，框出要识别的范围</string>
+    <string name="quick_hint_too_small">范围太小，请重新框选</string>
+    <string name="quick_hint_recognizing">识别中…</string>
+    <string name="quick_hint_too_fast">操作太快，请稍候</string>
+
+    <!-- 悬浮结果面板 -->
+    <string name="quick_panel_close">关闭</string>
+    <string name="quick_panel_drag_handle">拖动面板</string>
+    <string name="quick_panel_note_hint">备注（选填）</string>
+    <string name="quick_panel_note_toggle_ime">切换系统键盘</string>
+    <string name="quick_panel_thumbnail">截图缩略图</string>
+    <string name="quick_panel_not_recognized">未识别到金额，请手动输入</string>
+    <string name="quick_panel_ocr_failed">识别失败，请手动输入</string>
+    <string name="quick_panel_capture_failed">截图失败，请手动输入</string>
+    <string name="quick_panel_secure_window">当前页面设置了安全保护，无法截图，请手动输入</string>
+
+    <!-- 写入失败 -->
+    <string name="quick_save_failed">保存失败，请重试</string>
+
+    <!-- 权限引导（一次只讲一项） -->
+    <string name="quick_guide_overlay_title">需要悬浮窗权限</string>
+    <string name="quick_guide_overlay_body">框选金额的区域和记账面板都以悬浮窗显示，需要这一项权限。</string>
+    <string name="quick_guide_overlay_action">去授权</string>
+
+    <string name="quick_guide_a11y_title">需要无障碍服务</string>
+    <string name="quick_guide_a11y_body">本应用需要无障碍服务来读取当前屏幕画面，用于识别金额。只读取画面，不读取窗口内容，不模拟任何点击。</string>
+    <string name="quick_guide_a11y_action">去开启</string>
+    <string name="quick_guide_a11y_fallback">从图片识别</string>
+
+    <string name="quick_guide_killed_title">无障碍服务已被系统关闭</string>
+    <string name="quick_guide_killed_body">系统会在后台关闭无障碍服务。请在「设置 → 应用 → 自启动 / 后台运行」里给本应用加白名单，并关闭电池优化，否则识别会突然失效。</string>
+    <string name="quick_guide_killed_action">去重新开启</string>
+
+    <string name="quick_guide_image_title">从图片识别</string>
+    <string name="quick_error_no_image">没有读取到图片，请重新选择</string>
+
+    <string name="quick_guide_cancel">取消</string>
+    <string name="quick_guide_close">关闭</string>
+
+</resources>

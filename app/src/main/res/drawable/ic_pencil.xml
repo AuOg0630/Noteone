@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Phosphor Icons v2.1.1 (regular 权重) —— regular-pencil-simple
+  来源 https://github.com/phosphor-icons/core (MIT License)
+  规范要求的图标库：Phosphor Bold 或 Radix，统一 1.5dp 描边。
+  本文件为自动转换的 Android VectorDrawable：viewBox 256 保持不变，
+  regular 权重的描边宽度即 16/256，落到 24dp 视觉尺寸上正好是 1.5dp。
+  颜色统一为占位黑，实际颜色由 Compose 的 Icon(tint = ...) 决定。
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="20dp"
+    android:height="20dp"
+    android:viewportWidth="256"
+    android:viewportHeight="256">
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M227.31,73.37,182.63,28.68a16,16,0,0,0-22.63,0L36.69,152A15.86,15.86,0,0,0,32,163.31V208a16,16,0,0,0,16,16H92.69A15.86,15.86,0,0,0,104,219.31L227.31,96a16,16,0,0,0,0-22.63ZM92.69,208H48V163.31l88-88L180.69,120ZM192,108.68,147.31,64l24-24L216,84.68Z" />
+</vector>

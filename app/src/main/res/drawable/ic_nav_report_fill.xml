@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Phosphor Icons v2.1.1 (fill 权重) —— fill-chart-bar
+  来源 https://github.com/phosphor-icons/core (MIT License)
+  规范要求的图标库：Phosphor Bold 或 Radix，统一 1.5dp 描边。
+  本文件为自动转换的 Android VectorDrawable：viewBox 256 保持不变，
+  regular 权重的描边宽度即 16/256，落到 24dp 视觉尺寸上正好是 1.5dp。
+  颜色统一为占位黑，实际颜色由 Compose 的 Icon(tint = ...) 决定。
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="256"
+    android:viewportHeight="256">
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M232,208a8,8,0,0,1-8,8H32a8,8,0,0,1,0-16h8V136a8,8,0,0,1,8-8H72a8,8,0,0,1,8,8v64H96V88a8,8,0,0,1,8-8h32a8,8,0,0,1,8,8V200h16V40a8,8,0,0,1,8-8h40a8,8,0,0,1,8,8V200h8A8,8,0,0,1,232,208Z" />
+</vector>

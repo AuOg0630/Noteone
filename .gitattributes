@@ -1,0 +1,51 @@
+# 统一换行符，避免 Windows / Linux / macOS 协作者之间产生无意义的整文件 diff。
+# 规则：仓库内一律存 LF，检出时由 Git 按平台自动转换。
+* text=auto eol=lf
+
+# ---- 二进制文件：不做任何换行或文本转换 ----
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.webp  binary
+*.ico   binary
+*.ttf   binary
+*.otf   binary
+*.woff  binary
+*.woff2 binary
+*.jar   binary
+*.jks   binary
+*.keystore binary
+*.apk   binary
+*.aab   binary
+*.so    binary
+*.dex   binary
+*.tflite binary
+*.fb    binary
+*.binarypb binary
+*.at    binary
+*.tab   binary
+*.tab_i binary
+*.keystream binary
+*.len   binary
+*.bin   binary
+*.dat   binary
+
+# ---- 明确禁止转换：脚本类文件必须保持 LF ----
+# gradlew 是 POSIX shell 脚本，若被转成 CRLF，在 Linux / macOS / CI 上会报
+# "bad interpreter: /bin/sh^M: No such file or directory" 而无法执行。
+gradlew        text eol=lf
+gradlew.bat    text eol=crlf
+*.sh           text eol=lf
+*.bat          text eol=crlf
+*.cmd          text eol=crlf
+
+# ---- 文本文件按平台默认 ----
+*.kt   text
+*.kts  text
+*.java text
+*.xml  text
+*.toml text
+*.md   text
+*.properties text
+*.pro  text

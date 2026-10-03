@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  设置与管理页（E）的字符串。前缀 settings_*。
+
+  与 strings_record.xml / strings_report.xml 同理：新建独立文件，不动 A 的 values/strings.xml。
+  「支出 / 收入」这类公共动作文字直接复用 common_*，不重复定义。
+
+  「磁贴与识别」分组的大部分文案由 D 在 M4 交付说明 §4.1 给定，这里逐字使用
+  （D 的 strings_quick.xml 里刻意没放它们，留在那里会触发 lint 的 UnusedResources）。
+  例外：无障碍服务的**状态词**改用了短版本，理由见 SettingsScreen.kt 里的注释与交付说明。
+-->
+<resources>
+
+    <!-- 页头 -->
+    <string name="settings_title">设置</string>
+
+    <!-- 分组标题 -->
+    <string name="settings_group_book">账本</string>
+    <string name="settings_group_record">记账</string>
+    <string name="settings_group_budget">预算</string>
+    <string name="settings_group_quick">磁贴与识别</string>
+    <string name="settings_group_data">数据</string>
+    <string name="settings_group_about">关于</string>
+
+    <!-- 账本 -->
+    <string name="settings_book_manage">账本管理</string>
+    <string name="settings_book_current">首页账本</string>
+
+    <!-- 记账 -->
+    <string name="settings_category_manage">分类管理</string>
+    <string name="settings_quick_action_manage">快捷按钮</string>
+    <string name="settings_default_direction">默认方向</string>
+
+    <!-- 预算 -->
+    <string name="settings_budget_toggle">本月支出上限</string>
+    <string name="settings_budget_amount">限额金额</string>
+    <string name="settings_budget_edit_title">本月支出上限</string>
+
+    <!-- 磁贴与识别 -->
+    <string name="settings_tile_guide_title">添加磁贴</string>
+    <string name="settings_tile_guide_body">下拉状态栏展开快捷设置，点「编辑」把「记一笔」拖到面板上。之后下拉点一下就能识别屏幕上的金额。</string>
+    <string name="settings_a11y_title">无障碍服务</string>
+    <string name="settings_a11y_state_running">运行中</string>
+    <string name="settings_a11y_state_disabled">未开启</string>
+    <string name="settings_a11y_state_killed">已被系统关闭</string>
+    <string name="settings_a11y_action_enable">去开启</string>
+    <string name="settings_a11y_action_reenable">去重新开启</string>
+    <string name="settings_a11y_note">只读取屏幕画面用于识别金额，不读取窗口内容、不模拟点击。</string>
+    <string name="settings_overlay_title">悬浮窗权限</string>
+    <string name="settings_overlay_on">已开启</string>
+    <string name="settings_overlay_off">未开启</string>
+    <string name="settings_keepalive_title">后台保活</string>
+    <string name="settings_keepalive_body">系统会在后台关闭无障碍服务。请在「设置 → 应用 → 自启动 / 后台运行」里给本应用加白名单，并关闭电池优化，否则识别会突然失效。</string>
+    <string name="settings_keepalive_action">去设置</string>
+    <string name="settings_import_from_image">从图片识别</string>
+    <string name="settings_prefer_symbol_title">优先选择带货币符号的数字</string>
+    <string name="settings_privacy_note">本应用不申请网络权限。截图仅存在于内存，识别完成后立即销毁，不会写入磁盘。</string>
+    <string name="settings_service_lost">无障碍服务已被系统关闭，识别会失效</string>
+
+    <!-- 数据 -->
+    <string name="settings_export_csv">导出 CSV</string>
+    <string name="settings_export_json">导出 JSON 备份</string>
+    <string name="settings_restore_json">从备份恢复</string>
+    <string name="settings_clear_all">清空所有数据</string>
+
+    <!-- 关于 -->
+    <string name="settings_version">版本</string>
+
+    <!-- 反馈文案 -->
+    <string name="settings_ack">知道了</string>
+    <string name="settings_retry">重试</string>
+    <string name="settings_export_csv_done">已导出 %1$d 条记录</string>
+    <string name="settings_export_failed">导出失败，请重试</string>
+    <string name="settings_backup_done">备份已导出</string>
+    <string name="settings_backup_failed">备份导出失败，请重试</string>
+    <string name="settings_restore_done">已恢复备份</string>
+    <string name="settings_restore_corrupted">备份文件已损坏</string>
+    <string name="settings_restore_unsupported">备份来自更新版本，无法导入</string>
+    <string name="settings_restore_failed">读取备份文件失败</string>
+    <string name="settings_clear_done">已清空，恢复为初始数据</string>
+    <string name="settings_clear_failed">清空失败，请重试</string>
+
+    <!-- 恢复确认弹层 -->
+    <string name="settings_restore_confirm_title">从备份恢复</string>
+    <string name="settings_restore_confirm_body">将覆盖当前全部数据，此操作不可撤销。</string>
+    <string name="settings_restore_confirm_ok">覆盖并恢复</string>
+
+    <!-- 清空确认弹层 -->
+    <string name="settings_clear_confirm_title">清空所有数据</string>
+    <string name="settings_clear_confirm_body">所有账本、分类、快捷按钮与账单都会被删除，并恢复为初始数据。此操作不可撤销。</string>
+    <string name="settings_clear_confirm_hint">输入「清空」两个字以确认</string>
+    <string name="settings_clear_confirm_word">清空</string>
+
+    <!-- 弹层通用动作 -->
+    <string name="settings_cancel">取消</string>
+    <string name="settings_save">保存</string>
+    <string name="settings_delete">删除</string>
+
+    <!-- 账本切换弹层（设置页「首页账本」用；记账页固定头部也应复用这一份） -->
+    <string name="settings_book_switch_title">切换账本</string>
+    <string name="settings_book_manage_entry">管理账本 →</string>
+
+    <!-- 账本管理页 -->
+    <string name="settings_book_manage_title">账本管理</string>
+    <string name="settings_book_new">＋ 新建</string>
+    <string name="settings_book_new_title">新建账本</string>
+    <string name="settings_book_edit_title">编辑账本</string>
+    <string name="settings_book_name_hint">账本名称</string>
+    <string name="settings_book_default_badge">默认</string>
+    <string name="settings_book_limit">最多 10 个账本</string>
+    <string name="settings_book_failed">账本操作失败，请重试</string>
+    <string name="settings_book_delete_title">删除账本「%1$s」</string>
+    <string name="settings_book_delete_body">该账本下有 %1$d 条记录，请选择处理方式：</string>
+    <string name="settings_book_delete_body_empty">该账本下没有记录，可以直接删除。</string>
+    <string name="settings_book_delete_records">一并删除 %1$d 条记录</string>
+    <string name="settings_book_delete_move">把记录移到其他账本</string>
+    <string name="settings_book_delete_target">目标账本</string>
+    <string name="settings_book_delete_action">删除账本</string>
+
+    <!-- 分类管理页 -->
+    <string name="settings_category_manage_title">分类管理</string>
+    <string name="settings_category_new">＋ 新建</string>
+    <string name="settings_category_new_title">新建分类</string>
+    <string name="settings_category_edit_title">编辑分类</string>
+    <string name="settings_category_name_hint">分类名称</string>
+    <string name="settings_category_failed">分类操作失败，请重试</string>
+    <string name="settings_category_empty">该方向下还没有分类</string>
+    <string name="settings_tab_expense">支出分类</string>
+    <string name="settings_tab_income">收入分类</string>
+    <string name="settings_category_archived">已归档</string>
+    <string name="settings_category_restore">恢复</string>
+    <string name="settings_category_archive_title">归档分类「%1$s」</string>
+    <string name="settings_category_archive_body">删除后不再出现在记账页，已有记录仍会保留原分类名与色点。</string>
+    <string name="settings_category_archive_action">归档</string>
+    <string name="settings_color_label">色点</string>
+
+    <!-- 快捷按钮管理页 -->
+    <string name="settings_quick_manage_title">快捷按钮</string>
+    <string name="settings_quick_new">＋ 新建</string>
+    <string name="settings_quick_new_title">新建快捷按钮</string>
+    <string name="settings_quick_edit_title">编辑快捷按钮</string>
+    <string name="settings_quick_label_hint">按钮名称（最多 6 字）</string>
+    <string name="settings_quick_category">所属分类</string>
+    <string name="settings_quick_limit">最多 8 个快捷按钮</string>
+    <string name="settings_quick_failed">快捷按钮操作失败，请重试</string>
+    <string name="settings_quick_empty">还没有快捷按钮</string>
+    <string name="settings_quick_no_category">该方向下还没有分类，请先到「分类管理」新建</string>
+    <string name="settings_quick_delete_title">删除快捷按钮「%1$s」</string>
+    <string name="settings_quick_delete_body">删除后它不再出现在记账页的快捷区，历史记录不受影响。</string>
+    <string name="settings_direction_label">方向</string>
+    <string name="settings_uncategorized">未分类</string>
+
+    <!-- 拖拽手柄 -->
+    <string name="settings_drag_handle">长按拖动排序</string>
+
+</resources>

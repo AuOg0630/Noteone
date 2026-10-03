@@ -1,0 +1,34 @@
+# ---- 构建产物 ----
+build/
+app/build/
+out/
+
+# ---- Gradle / Kotlin 缓存 ----
+.gradle/
+.kotlin/
+
+# ---- IDE ----
+.idea/
+*.iml
+*.hprof
+captures/
+.externalNativeBuild/
+.cxx/
+
+# ---- 本地配置（含本机 SDK 路径，机器相关） ----
+local.properties
+
+# ---- 签名凭据，绝不入库 ----
+keystore.properties
+keystore/
+*.jks
+*.keystore
+
+# ---- 操作系统 ----
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---- 注意 ----
+# app/schemas/ 下的 Room schema JSON 由 KSP 生成，但**必须入库**：
+# 它是数据库迁移的验收基准。不要把它加进上面的忽略规则。

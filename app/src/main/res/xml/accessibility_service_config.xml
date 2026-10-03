@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  无障碍服务配置（规范 §2.3 / §8.8）。
+
+  android:canTakeScreenshot="true" 是**必须**的：缺失时 takeScreenshot() 会直接抛
+  SecurityException: Services don't have the capability of taking the screenshot。
+
+  刻意不加的东西：
+  - android:canRetrieveWindowContent：本项目只读画面、不读窗口内容，权限面收到最小；
+  - 文本变化类事件：accessibilityEventTypes 只订阅 typeWindowStateChanged。
+
+  关于耗电（本服务必须常开，所以要压到最省）：
+  - android:notificationTimeout 提到 1000ms：它只是「同类型事件静默多久才投递一次」的合并窗口，
+    本服务不消费事件，投递本身又是一次昂贵的跨进程调用，所以窗口越大越省；
+    对截图功能零影响。
+  - android:packageNames **必须**限定成应用自己。本服务的 onAccessibilityEvent 是空实现
+    （只用 takeScreenshot），不限定的话系统会把**所有** App 的每一次窗口变化都投递过来，
+    白白唤醒本进程。takeScreenshot() 是显示级能力，与事件订阅、packageNames 无关，
+    限定后截图功能不受影响。万一磁贴截图失效，第一个要回滚的就是这一行。
+-->
+<accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:accessibilityEventTypes="typeWindowStateChanged"
+    android:accessibilityFeedbackType="feedbackGeneric"
+    android:canTakeScreenshot="true"
+    android:description="@string/quick_a11y_description"
+    android:notificationTimeout="1000"
+    android:packageNames="com.noteone.app"
+    android:summary="@string/quick_a11y_summary" />

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  云备份与设备迁移策略。
+  本应用的备份开关是关的（AndroidManifest 里 allowBackup="false"）：
+  数据全部本地存储，只有「设置 → 数据 → JSON 备份」这一条用户显式触发的导出路径。
+  这里显式声明「不上云、不迁移」，同时满足 targetSdk 31+ 的要求。
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="root" />
+        <exclude domain="file" />
+        <exclude domain="database" />
+        <exclude domain="sharedpref" />
+        <exclude domain="external" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="root" />
+        <exclude domain="file" />
+        <exclude domain="database" />
+        <exclude domain="sharedpref" />
+        <exclude domain="external" />
+    </device-transfer>
+</data-extraction-rules>

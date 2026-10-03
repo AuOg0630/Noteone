@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  桌面长按图标的动态快捷方式（规范 §3.2 / §8.1）。
+
+  以**静态声明**的方式给出：安装后立即可用，不依赖首次启动去注册；
+  ShortcutManagerCompat 能做的事（限制频率、上报使用情况）这里用不上。
+  两条快捷方式都指向 QuickEntryActivity，只是 intent action 不同：
+  - quick_record        框选屏幕上的金额（走无障碍截图）
+  - quick_record_image  从图片记一笔（走 Photo Picker，零权限）
+-->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_tile_record"
+        android:shortcutId="quick_record"
+        android:shortcutLongLabel="@string/quick_shortcut_record_long"
+        android:shortcutShortLabel="@string/quick_shortcut_record_short">
+        <intent
+            android:action="com.noteone.app.action.QUICK_RECORD"
+            android:targetClass="com.noteone.app.QuickEntryActivity"
+            android:targetPackage="com.noteone.app" />
+    </shortcut>
+
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_image"
+        android:shortcutId="quick_record_image"
+        android:shortcutLongLabel="@string/quick_shortcut_image_long"
+        android:shortcutShortLabel="@string/quick_shortcut_image_short">
+        <intent
+            android:action="com.noteone.app.action.QUICK_RECORD_IMAGE"
+            android:targetClass="com.noteone.app.QuickEntryActivity"
+            android:targetPackage="com.noteone.app" />
+    </shortcut>
+
+</shortcuts>

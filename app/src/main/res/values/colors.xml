@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="common_canvas">#FFFFFFFF</color>
+    <color name="common_ink">#FF111111</color>
+    <!-- 应用图标底色：取自图标本身的奶油白（不是全站白，图标是唯一的例外） -->
+    <color name="common_launcher_background">#FFFEFDF4</color>
+</resources>

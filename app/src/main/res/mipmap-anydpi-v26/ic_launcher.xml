@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 底色取自图标本身的奶油白；前景是抠掉底色后的画面，
+         monochrome 直接复用同一张位图（系统只取它的 alpha 做剪影）。 -->
+    <background android:drawable="@color/common_launcher_background" />
+    <foreground android:drawable="@mipmap/ic_launcher_foreground" />
+    <monochrome android:drawable="@mipmap/ic_launcher_foreground" />
+</adaptive-icon>

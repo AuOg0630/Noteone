@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  快捷设置磁贴 / 桌面快捷方式图标 —— 应用图标（账单 + 金币）的**单色简化版**。
+
+  QS 磁贴只能吃单色（系统按磁贴状态着色，见 QuickEntryTileService），而且实际渲染尺寸只有
+  24dp 左右。第一版照搬了应用图标的全部细节（勾 + 三条明细线 + 金币双环 + $ 字形），
+  落到磁贴上就成了一团：线太细、$ 糊成一个点、整体还很挤。这一版按"一眼能认"做减法：
+
+  - 明细线 3 条 → **1 条**（够表达"清单"，再多就是噪声）；
+  - 金币由**描边双环**改成**实心圆**：24dp 下唯一能给足重量的元素，也让轮廓与实心形成对比；
+  - 去掉 $ 字形与内环：那个尺寸下必然糊，反而破坏"金币"这个整体形状；
+  - 整体缩到 32 视口的 3.5~28 之间，给磁贴圆形底留出呼吸位（原来是贴着边画的）；
+  - 描边 2.2 单位（24dp 下≈1.65dp，比规范 UI 图标的 1.5dp 略粗），小尺寸下才立得住。
+
+  颜色统一为占位黑，实际颜色由系统 tint。
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="32"
+    android:viewportHeight="32">
+    <!-- 文档轮廓 -->
+    <path
+        android:pathData="M7.6,4.4 H15.6 A3,3 0 0 1 18.6,7.4 V22.4 A3,3 0 0 1 15.6,25.4 H7.6 A3,3 0 0 1 4.6,22.4 V7.4 A3,3 0 0 1 7.6,4.4 Z"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="2.2" />
+    <!-- 勾 -->
+    <path
+        android:pathData="M7.4,12.2 L9.7,14.5 L14,10.2"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="2.4" />
+    <!-- 明细线（只留一条） -->
+    <path
+        android:pathData="M7.4,19.2 H14.8"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"
+        android:strokeWidth="2.2" />
+    <!-- 金币：实心，压在文档右下角 -->
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M15.7,21.2 A6.2,6.2 0 1 1 28.1,21.2 A6.2,6.2 0 1 1 15.7,21.2 Z" />
+</vector>

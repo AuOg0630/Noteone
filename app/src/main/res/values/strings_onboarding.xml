@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  首次启动的权限引导（v1.6 新增）。前缀 onboarding_*。
+
+  只放这一页**独有**的文案：无障碍 / 悬浮窗 / 后台保活的条目名、状态词与说明
+  统统复用 settings_*（同一套状态、同一套解释，避免两处漂移）。
+-->
+<resources>
+
+    <string name="onboarding_title">开启「记一笔」需要 2 项权限</string>
+    <string name="onboarding_intro">「记一笔」磁贴会读取当前屏幕画面，认出金额后直接填进记账卡片。要做到这一点需要下面两项系统权限。两项都不授权也能正常记账，只是屏幕识别用不了。</string>
+
+    <string name="onboarding_group_permission">权限</string>
+    <string name="onboarding_overlay_note">框选金额的区域和记账面板都以悬浮窗显示，不授权就弹不出来。</string>
+    <string name="onboarding_action_grant">去授权</string>
+
+    <string name="onboarding_group_keepalive">建议</string>
+    <string name="onboarding_keepalive_note">国产系统会在后台关掉无障碍服务，识别会突然失效。建议顺手加白名单并关闭电池优化。</string>
+
+    <string name="onboarding_start">开始记账</string>
+    <string name="onboarding_later_note">两项权限都可以稍后在「设置 → 磁贴与识别」里开启。</string>
+
+</resources>

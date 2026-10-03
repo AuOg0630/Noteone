@@ -1,0 +1,149 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!--
+      只申请这一个权限。禁止新增：QUERY_ALL_PACKAGES / READ_MEDIA_IMAGES /
+      FOREGROUND_SERVICE / FOREGROUND_SERVICE_MEDIA_PROJECTION / 任何存储写权限 / INTERNET。
+      屏幕采集走无障碍服务 takeScreenshot()，不使用 MediaProjection，因此不需要前台服务。
+    -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+    <!--
+      ============================================================
+      以下三条是「移除」声明，不是新增权限。清单合并报告
+      （app/build/outputs/logs/manifest-merger-debug-report.txt）显示：
+        com.google.android.datatransport:transport-backend-cct:2.3.3
+      （ML Kit text-recognition-chinese 的传递依赖，用于遥测上报）会往合并清单里
+      注入 android.permission.INTERNET 与 android.permission.ACCESS_NETWORK_STATE。
+      这会直接推翻「App 不申请网络权限」这条红线，也让设置页「关于」里
+      settings_privacy_note 的文案变成假话。
+
+      本项目的 OCR 是端侧 bundled 模型，运行期不需要任何网络；遥测上报被移除权限后
+      会静默失败，不影响识别。因此这里用 tools:node="remove" 把两条权限从合并结果里剔掉。
+      改依赖版本后必须重新检查合并清单，确认它们没有以别的名字回来。
+
+      另外 POST_NOTIFICATIONS 也一并移除：本 App 从不发通知（不申请、不请求、
+      无 NotificationChannel/NotificationManager 调用），声明一个永不使用的权限
+      只会让权限面变大。若将来真的要发通知，在 E 的设置页做运行时请求时再加回来。
+      ============================================================
+    -->
+    <uses-permission
+        android:name="android.permission.INTERNET"
+        tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.ACCESS_NETWORK_STATE"
+        tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.POST_NOTIFICATIONS"
+        tools:node="remove" />
+
+    <application
+        android:name=".NoteoneApp"
+        android:allowBackup="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:enableOnBackInvokedCallback="true"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/common_app_name"
+        android:roundIcon="@mipmap/ic_launcher"
+        android:supportsRtl="false"
+        android:theme="@style/Theme.Noteone"
+        tools:ignore="UnusedAttribute">
+
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|uiMode"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!-- 桌面长按图标的动态快捷方式声明（D 模块，res/xml/shortcuts.xml） -->
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+        </activity>
+
+        <!--
+          ============================================================
+          D 模块（磁贴与屏幕识别）。以下四条声明是 D 提给 A 的需求，
+          由 A 在这个共享文件里落地；D 自己不再改任何 A 的文件。
+          ============================================================
+        -->
+
+        <!--
+          透明入口 Activity。四种来路共用它：
+          1. 快捷设置磁贴         → QUICK_RECORD（走无障碍截图）
+          2. 桌面快捷方式「记一笔」 → QUICK_RECORD
+          3. 桌面快捷方式「从图片记一笔」/ 设置页入口 → QUICK_RECORD_IMAGE（Photo Picker）
+          4. 相册分享到本应用     → ACTION_SEND + image/*
+
+          关于 noHistory：任务书要求 `noHistory: true`，这里**刻意不加**。
+          原因：noHistory 会让 Activity 一旦被切到后台就 finish，而入口 3 必须先
+          启动系统的 Photo Picker（QuickEntryActivity 会被 stop），结果就再也回不来，
+          照片选择回调直接丢失。改用
+          `excludeFromRecents + taskAffinity="" + singleTask + 会话结束主动 finish()`，
+          对用户可见的行为与 noHistory 完全等价（既不在最近任务里，也不留返回栈），
+          但不影响跨 Activity 的结果回调。
+        -->
+        <activity
+            android:name=".QuickEntryActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|uiMode|density"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:taskAffinity=""
+            android:theme="@style/Theme.Noteone.Transparent"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="com.noteone.app.action.QUICK_RECORD" />
+                <action android:name="com.noteone.app.action.QUICK_RECORD_IMAGE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <!-- 回退路径 B 入口 1：相册里「分享」到本应用 -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
+        </activity>
+
+        <!--
+          快捷设置磁贴。图标是单色矢量，只用 alpha 通道，系统会按状态着色。
+        -->
+        <service
+            android:name=".quickentry.tile.QuickEntryTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_tile_record"
+            android:label="@string/quick_tile_label"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <!--
+          无障碍服务，**只用来 takeScreenshot**，不做任何节点读取与手势模拟。
+          android:exported 用 true（任务书写的是 false，已确认是错的）：
+          exported="false" 会禁止跨 uid 绑定，而绑定方是 system_server，
+          服务根本起不来；真正的访问控制在 android:permission 上——它只授予系统。
+        -->
+        <service
+            android:name=".quickentry.capture.ScreenCaptureService"
+            android:exported="true"
+            android:label="@string/quick_a11y_label"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service_config" />
+        </service>
+
+    </application>
+
+</manifest>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  记账模块（B）的字符串。前缀 record_*。
+
+  刻意**不改** values/strings.xml（那是 A 的文件，避免多人改同一行冲突），
+  新建本文件同样会被 AAPT 合并进 R.string。公共动作文字（完成 / 撤销 / 支出 / 收入）
+  直接复用 A 的 common_*。
+-->
+<resources>
+
+    <!-- 固定头部 -->
+    <string name="record_header_switch_book">切换账本</string>
+    <string name="record_header_month_balance">本月结余</string>
+
+    <!-- 记账卡片 -->
+    <string name="record_note_hint">备注（选填）</string>
+    <string name="record_note_toggle_ime">切换系统键盘</string>
+    <string name="record_category_picker">分类</string>
+    <string name="record_uncategorized">未分类</string>
+
+    <!-- 成功 / 失败反馈 -->
+    <string name="record_saved_with_category">已记 %1$s · %2$s</string>
+    <string name="record_saved_plain">已记 %1$s</string>
+    <string name="record_save_failed">保存失败，请重试</string>
+    <string name="record_retry">重试</string>
+
+    <!-- 账本切换弹层 -->
+    <string name="record_book_sheet_title">切换账本</string>
+    <string name="record_book_manage">管理账本 →</string>
+
+    <!-- 全量分类弹层 -->
+    <string name="record_category_sheet_title">选择分类</string>
+    <string name="record_category_manage">管理分类 →</string>
+
+</resources>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  账单页空状态插画：单色连续线稿（一张撕口小票）+ 一个 offset 的芥黄方块。
+  线宽 4 / 256，按 96dp 展示时正好是 1.5dp。
+  依据 SKILL.md §6「Illustrations: monochromatic, rough continuous-line ink sketches
+  on a white background, featuring a single offset geometric shape filled with a muted pastel color」。
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="96dp"
+    android:height="96dp"
+    android:viewportWidth="256"
+    android:viewportHeight="256">
+
+    <!-- offset 几何形：芥黄 #FBF3DB -->
+    <path
+        android:fillColor="#FFFBF3DB"
+        android:pathData="M156,40h62v62h-62z" />
+
+    <!-- 撕口小票轮廓 -->
+    <path
+        android:strokeColor="#FF111111"
+        android:strokeWidth="4"
+        android:strokeLineJoin="round"
+        android:strokeLineCap="round"
+        android:pathData="M62,40h108v168l-18,-13l-18,13l-18,-13l-18,13l-18,-13l-18,13Z" />
+
+    <!-- 内文两行 -->
+    <path
+        android:strokeColor="#FF111111"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:pathData="M86,84h60" />
+    <path
+        android:strokeColor="#FF111111"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:pathData="M86,118h40" />
+</vector>

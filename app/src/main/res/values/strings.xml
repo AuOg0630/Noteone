@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      字符串统一用模块前缀，避免多人同时改 strings.xml 时冲突（规范 §6 第 9 条）：
+      record_* / ledger_* / report_* / settings_* / quick_* / common_*
+      这里只放 core 公共组件自己用到的 common_* 与 nav_*。
+    -->
+
+    <!-- 应用名（Manifest 引用） -->
+    <string name="common_app_name">记一笔</string>
+
+    <!-- 公共动作 -->
+    <string name="common_undo">撤销</string>
+    <string name="common_done">完成</string>
+    <string name="common_back">返回</string>
+    <string name="common_backspace">退格</string>
+    <string name="common_expense">支出</string>
+    <string name="common_income">收入</string>
+
+    <!-- 底栏 -->
+    <string name="nav_record">记账</string>
+    <string name="nav_ledger">账单</string>
+    <string name="nav_report">汇总</string>
+    <string name="nav_settings">设置</string>
+</resources>

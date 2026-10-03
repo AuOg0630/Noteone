@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  键盘「⌫」键图标。
+  官方 Phosphor `backspace` SVG 文件名为 `backspace.svg`（regular 权重），
+  这里按 Phosphor 同一套网格（256 × 256）与同一描边宽度（16/256 = 1.5dp @24dp）绘制，
+  保证与其它图标在视觉上一致。
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="256"
+    android:viewportHeight="256">
+    <path
+        android:strokeColor="#FF111111"
+        android:strokeWidth="16"
+        android:strokeLineJoin="round"
+        android:strokeLineCap="round"
+        android:pathData="M100,64 L212,64 L212,192 L100,192 L36,128 Z" />
+    <path
+        android:strokeColor="#FF111111"
+        android:strokeWidth="16"
+        android:strokeLineCap="round"
+        android:pathData="M136,108 L172,148" />
+    <path
+        android:strokeColor="#FF111111"
+        android:strokeWidth="16"
+        android:strokeLineCap="round"
+        android:pathData="M172,108 L136,148" />
+</vector>
