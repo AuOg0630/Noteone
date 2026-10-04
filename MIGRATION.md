@@ -112,8 +112,8 @@
 
 | # | 项 | 状态 |
 |---|---|---|
-| 1 | 仓库地址 | README 中为 `<仓库地址>` 占位，需替换 |
-| 2 | 许可证类型 | 已按 **MIT** 写入，如需其他协议请替换 `LICENSE` |
+| 1 | 仓库地址 | 已填 **https://github.com/AuOg0630/Noteone** |
+| 2 | 许可证类型 | 已按 **GPL-3.0-or-later** 写入 `LICENSE` 与全部源文件 SPDX 头 |
 | 3 | 签名密钥库 | 目标产物**不含**任何 `.jks`。原 `keystore/remember-money.jks` 保留在源目录，需自行备份；注意其 alias 为 `remembermoney`，应用内已改名为 `noteone`，正式发布前建议重新生成密钥库 |
 | 4 | 包名 | 已用 `com.noteone.app`。若日后要上架，需确认域名反写是否可用 |
 | 5 | 应用显示名 | 仍为「记一笔」，未改。如需改为「Noteone」请改 `res/values/strings.xml` 的 `common_app_name` |
@@ -206,3 +206,35 @@
 - README 的许可证章节改为「你可以做的 / 你必须做的」对照表，并说明与宽松许可的区别
 
 改动后复验：`assembleRelease` + 131 条单测 + `lintDebug` 全绿，APK 正常产出 74,860,097 B。
+
+---
+
+## 8. Git 仓库初始化（2026-10-03 23:03）
+
+- `git init -b main`，默认分支 **main**
+- **提交身份仅配置在本仓库**（不动全局，因为本机原本未设置任何 git 身份）：
+  `user.name = AuOg` / `user.email = AuOg@users.noreply.github.com`
+  （noreply 地址不会泄露真实邮箱，可直接推送到 GitHub）
+- 新增 `.gitattributes`：仓库内统一存 LF，避免跨平台产生整文件 diff。
+  其中 **`gradlew` 强制 `eol=lf`** —— 它是 POSIX shell 脚本，若被转成 CRLF，
+  在 Linux / macOS / CI 上会报 `bad interpreter: /bin/sh^M` 而无法执行。
+- 首次提交：`5d98cbc`，171 个文件 / 23,112 行
+
+### 泄漏检查
+
+以下三项确实存在于工作目录，但**均被 `.gitignore` 正确排除**，未进入提交：
+
+| 文件 | 内容 |
+|---|---|
+| `keystore.properties` | 签名口令（明文） |
+| `keystore/noteone.jks` | 签名密钥库 |
+| `local.properties` | 本机 SDK 绝对路径 |
+
+首次提交前已逐项确认：暂存区里 `keystore.properties` / `*.jks` / `local.properties` / `app/build/` 命中数均为 **0**。
+
+### 推送
+
+```bash
+git remote add origin https://github.com/AuOg0630/Noteone.git
+git push -u origin main
+```

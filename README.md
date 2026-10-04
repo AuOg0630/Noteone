@@ -218,7 +218,7 @@ Noteone/
 ### 步骤
 
 ```bash
-git clone <仓库地址>
+git clone https://github.com/AuOg0630/Noteone.git
 cd Noteone
 
 # 指定本机 SDK 路径（该文件已被 .gitignore 排除，不要提交）
