@@ -3,6 +3,10 @@ build/
 app/build/
 out/
 
+# ---- 用于上传 Release 的 APK 暂存目录 ----
+dist/
+*.apk
+
 # ---- Gradle / Kotlin 缓存 ----
 .gradle/
 .kotlin/

@@ -266,11 +266,21 @@ keyPassword=...
 
 ## 安装
 
+### 方式一：下载现成 APK（推荐）
+
+前往 [Releases](https://github.com/AuOg0630/Noteone/releases) 页面，下载最新的 `noteone-v1.6.apk`，拷贝到手机点击安装（需允许「安装未知来源应用」）。
+
+该 APK 已使用项目签名密钥签名，可直接覆盖升级。签名证书 SHA-256 指纹：
+
+```
+4baed0362be18480c739a81b13c97d152e405b7f281b13e8790e3af2a1e6433e
+```
+
+### 方式二：自行构建
+
 ```bash
 adb install -r app/build/outputs/apk/release/app-release.apk
 ```
-
-也可将 APK 拷贝到手机点击安装（需允许「安装未知来源应用」）。
 
 ### 启用磁贴
 
