@@ -53,7 +53,7 @@
 
 **开了无障碍也几乎不耗电**。无障碍服务做了三重优化：不监听任何界面事件、只处理自己 App 的窗口变化、事件合并窗口设为 1 秒。它平时处于完全休眠状态，只在点磁贴时才被唤醒。
 
-**App 不申请 INTERNET 权限**，没有联网能力，所有数据只存在手机本地。这一点可以用 `aapt2 dump permissions app-release.apk` 自行验证。
+**App 不申请 INTERNET 权限**，没有联网能力，所有数据只存在手机本地。这一点可以用 `aapt2 dump permissions noteone-v1.7.apk` 自行验证。
 
 ---
 
