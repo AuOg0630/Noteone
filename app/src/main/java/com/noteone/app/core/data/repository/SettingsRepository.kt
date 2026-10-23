@@ -53,6 +53,9 @@ interface SettingsRepository {
     /** 磁贴首次引导是否已完成。 */
     val tileFirstRunDone: Flow<Boolean>
 
+    /** 记账成功后是否推送「今天第几笔」通知，默认开。 */
+    val recordNoticeEnabled: Flow<Boolean>
+
     suspend fun setCurrentBookId(id: Long)
 
     suspend fun setDefaultDirection(direction: Int)
@@ -66,6 +69,8 @@ interface SettingsRepository {
     suspend fun setPreferCurrencySymbol(prefer: Boolean)
 
     suspend fun setTileFirstRunDone(done: Boolean)
+
+    suspend fun setRecordNoticeEnabled(enabled: Boolean)
 }
 
 @Singleton
@@ -114,6 +119,12 @@ class SettingsRepositoryImpl @Inject constructor(
         .map { it[Keys.TileFirstRunDone] ?: false }
         .distinctUntilChanged()
 
+    // 默认开：这是「记完账立刻知道今天第几笔」的默认体验，
+    // 真正的拦截点是系统通知权限，不是这里的偏好值。
+    override val recordNoticeEnabled: Flow<Boolean> = dataStore.data
+        .map { it[Keys.RecordNoticeEnabled] ?: true }
+        .distinctUntilChanged()
+
     override suspend fun setCurrentBookId(id: Long) {
         dataStore.edit { it[Keys.CurrentBookId] = id }
     }
@@ -140,6 +151,10 @@ class SettingsRepositoryImpl @Inject constructor(
 
     override suspend fun setTileFirstRunDone(done: Boolean) {
         dataStore.edit { it[Keys.TileFirstRunDone] = done }
+    }
+
+    override suspend fun setRecordNoticeEnabled(enabled: Boolean) {
+        dataStore.edit { it[Keys.RecordNoticeEnabled] = enabled }
     }
 
     /** 存储值失效时回退到默认账本 / 第一个账本，并把回退结果写回，避免每次都重新计算。 */
@@ -173,5 +188,6 @@ class SettingsRepositoryImpl @Inject constructor(
         val BudgetCents = longPreferencesKey("budget_cents")
         val PreferCurrencySymbol = booleanPreferencesKey("prefer_currency_symbol")
         val TileFirstRunDone = booleanPreferencesKey("tile_first_run_done")
+        val RecordNoticeEnabled = booleanPreferencesKey("record_notice_enabled")
     }
 }

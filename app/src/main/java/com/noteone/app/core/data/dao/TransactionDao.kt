@@ -100,6 +100,20 @@ interface TransactionDao {
     @Query("SELECT COUNT(*) FROM transactions WHERE bookId = :bookId AND deletedAt IS NULL")
     suspend fun countActiveByBook(bookId: Long): Int
 
+    /**
+     * 区间内的有效记录条数。
+     *
+     * 只服务「今天第几笔」这一个用途：区间由调用方按自然日算好（含端点），
+     * 查询发生在插入**之后**，所以返回值天然包含刚写进去的那一笔。
+     */
+    @Query(
+        """
+        SELECT COUNT(*) FROM transactions
+        WHERE bookId = :bookId AND occurredAt BETWEEN :startMs AND :endMs AND deletedAt IS NULL
+        """
+    )
+    suspend fun countActiveInRange(bookId: Long, startMs: Long, endMs: Long): Int
+
     /** 备份导出：连软删除的一起导出（规范 §6.1）。 */
     @Query("SELECT * FROM transactions ORDER BY occurredAt DESC, id DESC")
     suspend fun getAllIncludingDeleted(): List<TransactionEntity>

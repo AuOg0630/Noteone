@@ -6,6 +6,10 @@
 
 package com.noteone.app.feature.record
 
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -22,7 +26,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.noteone.app.R
@@ -31,6 +37,7 @@ import com.noteone.app.core.design.component.AppScaffold
 import com.noteone.app.core.design.component.UndoSnackbarHost
 import com.noteone.app.core.design.component.formatMoneyText
 import com.noteone.app.core.design.component.showUndoSnackbar
+import com.noteone.app.core.notify.RecordNotifier
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -65,6 +72,18 @@ fun RecordScreen(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+
+    /**
+     * Android 13+ 的通知权限。
+     *
+     * 请求时机刻意放在**记账成功之后**：用户刚看到「已记 ¥x」，此时要「今天第几笔」
+     * 的提醒最说得通。只在本机还没授权时才会真的弹系统对话框，
+     * 已授权 / 已永久拒绝时系统直接回调，不打扰。
+     */
+    val noticePermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+    ) { /* 拒绝不影响记账，开关状态与说明都在设置页 */ }
 
     // 文案在 composable 作用域里取好：`stringResource` 是 @Composable，
     // 不能用在 `LaunchedEffect` 的挂起块里；而 lint 也不允许在 composable 里
@@ -79,6 +98,22 @@ fun RecordScreen(
     var pulse by remember { mutableIntStateOf(0) }
     var showBookSheet by remember { mutableStateOf(false) }
     var showCategorySheet by remember { mutableStateOf(false) }
+
+    /**
+     * 记账成功后补一次通知权限请求。
+     *
+     * 只在「设置里的开关是开的、系统却还没授权」时动手——这正是开关默认打开
+     * 但新装用户一次都没被问过的那种状态。
+     */
+    fun requestNoticePermissionIfNeeded() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
+        if (!state.recordNoticeEnabled) return
+        val granted = ContextCompat.checkSelfPermission(
+            context,
+            RecordNotifier.PERMISSION_POST_NOTIFICATIONS,
+        ) == PackageManager.PERMISSION_GRANTED
+        if (!granted) noticePermissionLauncher.launch(RecordNotifier.PERMISSION_POST_NOTIFICATIONS)
+    }
 
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
@@ -97,6 +132,7 @@ fun RecordScreen(
                             viewModel.undoDelete(event.transactionId)
                         }
                     }
+                    requestNoticePermissionIfNeeded()
                 }
 
                 RecordEvent.SaveFailed -> {

@@ -9,6 +9,7 @@ package com.noteone.app
 import android.app.Application
 import com.noteone.app.core.data.db.DatabaseInitializer
 import com.noteone.app.core.domain.PurgeDeletedUseCase
+import com.noteone.app.core.notify.RecordNotifier
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,9 +20,10 @@ import javax.inject.Inject
 /**
  * 应用入口。数据库单例与 DataStore 单例都由 Hilt 提供（规范 §2.3）。
  *
- * 启动时做两件一次性的事情，都放在 IO 线程，不阻塞首帧：
+ * 启动时做三件一次性的事情，都放在 IO 线程，不阻塞首帧：
  * 1. 首次启动写入默认账本 + 13 个内置分类 + 8 个内置快捷按钮（幂等）；
- * 2. 物理清除 7 天前的软删除记录（`PurgeDeletedUseCase`）。
+ * 2. 物理清除 7 天前的软删除记录（`PurgeDeletedUseCase`）；
+ * 3. 建记账通知渠道（幂等，必须在第一笔账之前建好，否则 Android 8.0 会丢通知）。
  */
 @HiltAndroidApp
 class NoteoneApp : Application() {
@@ -32,10 +34,14 @@ class NoteoneApp : Application() {
     @Inject
     lateinit var purgeDeletedUseCase: PurgeDeletedUseCase
 
+    @Inject
+    lateinit var recordNotifier: RecordNotifier
+
     private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     override fun onCreate() {
         super.onCreate()
+        recordNotifier.ensureChannel()
         applicationScope.launch {
             databaseInitializer.initializeIfNeeded()
             purgeDeletedUseCase()

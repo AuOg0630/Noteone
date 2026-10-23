@@ -69,6 +69,8 @@ data class SettingsUiState(
     val budgetEnabled: Boolean = false,
     val budgetCents: Long = 0L,
     val preferCurrencySymbol: Boolean = true,
+    /** 记账后是否推「今天第几笔」通知。默认开，真正的门槛是系统通知权限。 */
+    val recordNoticeEnabled: Boolean = true,
     val a11yStatus: A11yStatus = A11yStatus.DISABLED,
     val overlayGranted: Boolean = false,
     val versionName: String = "",
@@ -93,7 +95,7 @@ private data class PreferenceState(
     val defaultDirection: Int = Direction.Expense,
     val budgetEnabled: Boolean = false,
     val budgetCents: Long = 0L,
-    val preferCurrencySymbol: Boolean = true,
+    val recordNoticeEnabled: Boolean = true,
 )
 
 /**
@@ -123,18 +125,26 @@ class SettingsViewModel @Inject constructor(
     val events: SharedFlow<SettingsEvent> = _events.asSharedFlow()
 
     private val preferences: Flow<PreferenceState> = combine(
-        bookRepository.observeAll(),
-        bookRepository.observeCurrent(),
-        settingsRepository.defaultDirection,
-        settingsRepository.budgetEnabled,
-        settingsRepository.budgetCents,
-    ) { books, current, direction, budgetEnabled, budgetCents ->
+        combine(
+            bookRepository.observeAll(),
+            bookRepository.observeCurrent(),
+            settingsRepository.defaultDirection,
+        ) { books, current, direction -> Triple(books, current, direction) },
+        combine(
+            settingsRepository.budgetEnabled,
+            settingsRepository.budgetCents,
+            settingsRepository.recordNoticeEnabled,
+        ) { budgetEnabled, budgetCents, noticeEnabled ->
+            Triple(budgetEnabled, budgetCents, noticeEnabled)
+        },
+    ) { bookPart, budgetPart ->
         PreferenceState(
-            books = books,
-            currentBookId = current.id,
-            defaultDirection = direction,
-            budgetEnabled = budgetEnabled,
-            budgetCents = budgetCents,
+            books = bookPart.first,
+            currentBookId = bookPart.second.id,
+            defaultDirection = bookPart.third,
+            budgetEnabled = budgetPart.first,
+            budgetCents = budgetPart.second,
+            recordNoticeEnabled = budgetPart.third,
         )
     }
 
@@ -154,6 +164,7 @@ class SettingsViewModel @Inject constructor(
             budgetEnabled = preference.budgetEnabled,
             budgetCents = preference.budgetCents,
             preferCurrencySymbol = preferSymbol,
+            recordNoticeEnabled = preference.recordNoticeEnabled,
             a11yStatus = extra.first.a11yStatus,
             overlayGranted = extra.first.overlayGranted,
             versionName = appVersionName(),
@@ -204,6 +215,16 @@ class SettingsViewModel @Inject constructor(
 
     fun setPreferCurrencySymbol(prefer: Boolean) {
         viewModelScope.launch { settingsRepository.setPreferCurrencySymbol(prefer) }
+    }
+
+    /**
+     * 开关「记账后提醒」。
+     *
+     * **权限请求不在 ViewModel 里做**：Android 的运行时权限必须由 Activity 发起，
+     * 页面拿到系统回调后把结果写回来（同意就写 true，拒绝就写 false）。
+     */
+    fun setRecordNoticeEnabled(enabled: Boolean) {
+        viewModelScope.launch { settingsRepository.setRecordNoticeEnabled(enabled) }
     }
 
     fun selectBook(bookId: Long) {

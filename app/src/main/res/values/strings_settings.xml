@@ -30,6 +30,10 @@
     <string name="settings_category_manage">分类管理</string>
     <string name="settings_quick_action_manage">快捷按钮</string>
     <string name="settings_default_direction">默认方向</string>
+    <string name="settings_record_notice_toggle">记账后提醒</string>
+    <string name="settings_record_notice_note">每记一笔，通知栏提示这是今天的第几笔。通知权限被系统关闭时不会发出。</string>
+    <string name="settings_notice_permission_denied">未获得通知权限，记账提醒无法发送</string>
+    <string name="settings_notice_permission_action">去开启</string>
 
     <!-- 预算 -->
     <string name="settings_budget_toggle">本月支出上限</string>

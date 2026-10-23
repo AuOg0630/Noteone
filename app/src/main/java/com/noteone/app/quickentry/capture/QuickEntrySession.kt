@@ -724,20 +724,33 @@ class QuickEntrySession(
         panelState.value = state.copy(saving = true, message = null)
         sessionScope.launch {
             try {
+                val direction = if (state.isIncome) Direction.Income else Direction.Expense
+                val categoryName = state.selectedCategoryId?.let { inputs.categoryById[it]?.name }
+                val occurredAt = System.currentTimeMillis()
                 repositories.transactions.insert(
                     TransactionDraft(
                         bookId = inputs.bookId,
                         amountCents = cents,
-                        direction = if (state.isIncome) Direction.Income else Direction.Expense,
+                        direction = direction,
                         categoryId = state.selectedCategoryId,
                         note = state.note.trim(),
-                        occurredAt = System.currentTimeMillis(),
+                        occurredAt = occurredAt,
                         source = TransactionSource.TileOcr,
                         recognizedText = recognizedTextOf(state.candidates),
                     ),
                 )
                 state.selectedCategoryId?.let { id ->
                     repositories.settings.setLastUsedCategoryId(id)
+                }
+                // 与首页记账同一条通道：失败（无权限 / 渠道被关）不能影响已入账的事实
+                runCatching {
+                    repositories.notifier.notifySaved(
+                        bookId = inputs.bookId,
+                        cents = cents,
+                        direction = direction,
+                        categoryName = categoryName,
+                        occurredAt = occurredAt,
+                    )
                 }
                 onSaved(cents)
             } catch (cancelled: CancellationException) {

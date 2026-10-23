@@ -2,15 +2,16 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <!--
-      只申请这一个权限。禁止新增：QUERY_ALL_PACKAGES / READ_MEDIA_IMAGES /
-      FOREGROUND_SERVICE / FOREGROUND_SERVICE_MEDIA_PROJECTION / 任何存储写权限 / INTERNET。
+      只申请这三条权限（后两条是「移除」声明，见下）。禁止新增：
+      QUERY_ALL_PACKAGES / READ_MEDIA_IMAGES / FOREGROUND_SERVICE /
+      FOREGROUND_SERVICE_MEDIA_PROJECTION / 任何存储写权限 / INTERNET。
       屏幕采集走无障碍服务 takeScreenshot()，不使用 MediaProjection，因此不需要前台服务。
     -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <!--
       ============================================================
-      以下三条是「移除」声明，不是新增权限。清单合并报告
+      下面两条是「移除」声明，不是新增权限。清单合并报告
       （app/build/outputs/logs/manifest-merger-debug-report.txt）显示：
         com.google.android.datatransport:transport-backend-cct:2.3.3
       （ML Kit text-recognition-chinese 的传递依赖，用于遥测上报）会往合并清单里
@@ -22,19 +23,17 @@
       会静默失败，不影响识别。因此这里用 tools:node="remove" 把两条权限从合并结果里剔掉。
       改依赖版本后必须重新检查合并清单，确认它们没有以别的名字回来。
 
-      另外 POST_NOTIFICATIONS 也一并移除：本 App 从不发通知（不申请、不请求、
-      无 NotificationChannel/NotificationManager 调用），声明一个永不使用的权限
-      只会让权限面变大。若将来真的要发通知，在 E 的设置页做运行时请求时再加回来。
+      上面的 POST_NOTIFICATIONS 是**真实申请**的：记账成功后会推一条
+      「今天第几笔」的横幅通知。它只在 Android 13+ 存在，运行时按需请求，
+      低版本系统忽略这条声明。
       ============================================================
     -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission
         android:name="android.permission.INTERNET"
         tools:node="remove" />
     <uses-permission
         android:name="android.permission.ACCESS_NETWORK_STATE"
-        tools:node="remove" />
-    <uses-permission
-        android:name="android.permission.POST_NOTIFICATIONS"
         tools:node="remove" />
 
     <application

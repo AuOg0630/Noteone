@@ -6,7 +6,9 @@
 
 package com.noteone.app.feature.settings
 
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
@@ -33,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
+import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -48,6 +51,7 @@ import com.noteone.app.core.design.component.Divider
 import com.noteone.app.core.design.component.MoneyText
 import com.noteone.app.core.design.component.UndoSnackbarHost
 import com.noteone.app.core.design.component.showUndoSnackbar
+import com.noteone.app.core.notify.RecordNotifier
 import com.noteone.app.export.defaultCsvFileName
 import com.noteone.app.feature.book.BookSwitcherSheet
 import com.noteone.app.quickentry.state.A11yStatus
@@ -111,6 +115,8 @@ fun SettingsScreen(
     val clearFailedText = stringResource(R.string.settings_clear_failed)
     val serviceLostText = stringResource(R.string.settings_service_lost)
     val reenableLabel = stringResource(R.string.settings_a11y_action_reenable)
+    val noticeDeniedText = stringResource(R.string.settings_notice_permission_denied)
+    val noticeOpenLabel = stringResource(R.string.settings_notice_permission_action)
 
     // ------------------------------------------------------------------ SAF
 
@@ -148,6 +154,38 @@ fun SettingsScreen(
             DataOperation.EXPORT_JSON -> lastExportUri?.let { viewModel.exportBackup(it) }
             DataOperation.CLEAR -> viewModel.clearAll()
             DataOperation.RESTORE -> restoreLauncher.launch(ANY_FILE)
+        }
+    }
+
+    // ------------------------------------------------------------------ 通知权限
+
+    /** Android 13+ 且还没授权。低于 13 的系统没有这个运行时权限，视为已授予。 */
+    fun needsNoticePermission(): Boolean =
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(
+                context,
+                RecordNotifier.PERMISSION_POST_NOTIFICATIONS,
+            ) != PackageManager.PERMISSION_GRANTED
+
+    /**
+     * 打开「记账后提醒」时才申请权限。
+     *
+     * 拒绝后开关回落到关（保持「开关状态 = 真的会收到通知」），并给一条
+     * 「去开启」的提示——用户永久拒绝后系统不再弹窗，只能走系统通知设置。
+     */
+    val noticePermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+    ) { granted ->
+        viewModel.setRecordNoticeEnabled(granted)
+        if (!granted) {
+            scope.launch {
+                snackbarHostState.showUndoSnackbar(
+                    message = noticeDeniedText,
+                    holdMillis = FAILURE_SNACKBAR_MS,
+                    actionLabel = noticeOpenLabel,
+                    onUndo = { context.startActivity(SettingsIntents.notificationSettings(context)) },
+                )
+            }
         }
     }
 
@@ -292,6 +330,20 @@ fun SettingsScreen(
                     ),
                     onClick = { showDirectionSheet = true },
                 )
+                Divider()
+                SettingSwitchRow(
+                    text = stringResource(R.string.settings_record_notice_toggle),
+                    checked = state.recordNoticeEnabled,
+                    onCheckedChange = { enabled ->
+                        when {
+                            !enabled -> viewModel.setRecordNoticeEnabled(false)
+                            needsNoticePermission() ->
+                                noticePermissionLauncher.launch(RecordNotifier.PERMISSION_POST_NOTIFICATIONS)
+                            else -> viewModel.setRecordNoticeEnabled(true)
+                        }
+                    },
+                )
+                SettingsNote(text = stringResource(R.string.settings_record_notice_note))
 
                 // ---------------------------------------------------- 预算
                 SettingsGroupLabel(text = stringResource(R.string.settings_group_budget))

@@ -22,6 +22,7 @@ import com.noteone.app.core.data.seed.BuiltInData
 import com.noteone.app.core.domain.AmountInputRules
 import com.noteone.app.core.domain.TimeRange
 import com.noteone.app.core.domain.TimeRanges
+import com.noteone.app.core.notify.RecordNotifier
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -64,6 +65,13 @@ data class RecordUiState(
     val monthIncomeCents: Long = 0L,
     /** 回查分类名与色点用，**含已归档** */
     val categoryById: Map<Long, Category> = emptyMap(),
+    /**
+     * 设置页的「记账后提醒」开关。
+     *
+     * 首页拿它决定「记账成功后要不要顺手请求通知权限」——
+     * 偏好开着但系统还没授权时，这是最自然的一次请求时机。
+     */
+    val recordNoticeEnabled: Boolean = true,
 ) {
     /** 本月结余 = 收入 − 支出。 */
     val monthBalanceCents: Long get() = monthIncomeCents - monthExpenseCents
@@ -104,6 +112,7 @@ class RecordViewModel @Inject constructor(
     private val transactionRepository: TransactionRepository,
     private val categoryRepository: CategoryRepository,
     private val settingsRepository: SettingsRepository,
+    private val recordNotifier: RecordNotifier,
 ) : ViewModel() {
 
     /** 可写状态：只由用户操作驱动。 */
@@ -128,6 +137,7 @@ class RecordViewModel @Inject constructor(
         val lastCategoryId: Long,
         val activeCategories: List<Category>,
         val allCategories: List<Category>,
+        val recordNoticeEnabled: Boolean,
     )
 
     private data class TxSnapshot(
@@ -173,7 +183,10 @@ class RecordViewModel @Inject constructor(
         combine(
             categoryRepository.observeActive(),
             categoryRepository.observeAll(),
-        ) { active, all -> active to all },
+            settingsRepository.recordNoticeEnabled,
+        ) { active, all, noticeEnabled ->
+            Triple(active, all, noticeEnabled)
+        },
     ) { bookPart, categoryPart ->
         StaticSnapshot(
             books = bookPart.books,
@@ -181,6 +194,7 @@ class RecordViewModel @Inject constructor(
             lastCategoryId = bookPart.lastCategoryId,
             activeCategories = categoryPart.first,
             allCategories = categoryPart.second,
+            recordNoticeEnabled = categoryPart.third,
         )
     }
 
@@ -251,6 +265,11 @@ class RecordViewModel @Inject constructor(
         if (editable.value.saving) return
 
         val note = editable.value.note.trim()
+        val direction = if (state.isIncome) Direction.Income else Direction.Expense
+        val categoryName = state.categoryById[state.selectedCategoryId]?.name
+        // occurredAt 只取一次：写库与「今天第几笔」的日界必须基于同一个时间点，
+        // 否则 23:59:59.999 入账、00:00:00.001 算序号会数错天。
+        val occurredAt = System.currentTimeMillis()
         editable.update { it.copy(saving = true) }
 
         viewModelScope.launch {
@@ -259,20 +278,31 @@ class RecordViewModel @Inject constructor(
                     TransactionDraft(
                         bookId = state.bookId,
                         amountCents = cents,
-                        direction = if (state.isIncome) Direction.Income else Direction.Expense,
+                        direction = direction,
                         categoryId = state.selectedCategoryId,
                         note = note,
-                        occurredAt = System.currentTimeMillis(),
+                        occurredAt = occurredAt,
                         source = TransactionSource.Manual,
                     ),
                 )
                 // 成功：清空金额与备注，**保留分类与方向**（连续记账）
                 editable.update { it.copy(amountText = "", note = "", saving = false) }
+                // 通知只是锦上添花：发不出去（无权限 / 渠道被关 / 查库失败）
+                // 都不能让「已经入账」变成一次失败提示
+                runCatching {
+                    recordNotifier.notifySaved(
+                        bookId = state.bookId,
+                        cents = cents,
+                        direction = direction,
+                        categoryName = categoryName,
+                        occurredAt = occurredAt,
+                    )
+                }
                 _events.emit(
                     RecordEvent.Saved(
                         transactionId = newId,
                         cents = cents,
-                        categoryName = state.categoryById[state.selectedCategoryId]?.name,
+                        categoryName = categoryName,
                     ),
                 )
             } catch (cancelled: CancellationException) {
@@ -312,6 +342,7 @@ class RecordViewModel @Inject constructor(
             monthExpenseCents = tx.monthExpense,
             monthIncomeCents = tx.monthIncome,
             categoryById = statics.allCategories.associateBy { it.id },
+            recordNoticeEnabled = statics.recordNoticeEnabled,
         )
     }
 }

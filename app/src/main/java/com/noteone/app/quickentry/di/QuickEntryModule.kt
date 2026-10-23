@@ -11,6 +11,7 @@ import com.noteone.app.core.data.repository.CategoryRepository
 import com.noteone.app.core.data.repository.QuickActionRepository
 import com.noteone.app.core.data.repository.SettingsRepository
 import com.noteone.app.core.data.repository.TransactionRepository
+import com.noteone.app.core.notify.RecordNotifier
 import com.noteone.app.quickentry.ocr.MlKitOcrClient
 import com.noteone.app.quickentry.ocr.OcrClient
 import dagger.Binds
@@ -34,6 +35,8 @@ class QuickEntryRepositories @Inject constructor(
     val quickActions: QuickActionRepository,
     val transactions: TransactionRepository,
     val settings: SettingsRepository,
+    /** 记账成功后的「今天第几笔」通知（与首页记账共用同一条通道）。 */
+    val notifier: RecordNotifier,
 )
 
 /** D 模块的 Hilt 绑定。只绑一个接口，不引入任何新的第三方依赖。 */

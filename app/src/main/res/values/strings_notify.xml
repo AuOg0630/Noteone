@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  记账通知的字符串。前缀 notify_*。
+
+  与 strings_record.xml 同理：独立文件，不动 A 的 values/strings.xml。
+-->
+<resources>
+
+    <!-- 通知渠道（系统「设置 → 通知」里显示的名字） -->
+    <string name="notify_channel_name">记账记录</string>
+    <string name="notify_channel_desc">每记一笔账后提示这是当天的第几笔</string>
+
+    <!-- 通知正文 -->
+    <string name="notify_title_today">今天第 %1$d 笔</string>
+    <string name="notify_body_plain">%1$s %2$s</string>
+    <string name="notify_body_with_category">%1$s %2$s · %3$s</string>
+
+</resources>

@@ -43,4 +43,14 @@ object SettingsIntents {
     /** 「从图片识别」：零权限入口，直接走 D 的透明 Activity（D 交付说明 §4.1）。 */
     fun pickImage(context: Context): Intent =
         QuickEntryActivity.intentForPickImage(context)
+
+    /**
+     * 本应用的**通知设置**。
+     *
+     * 用户把 POST_NOTIFICATIONS 永久拒绝之后，运行时请求不再弹窗，只能到这里手动打开。
+     * minSdk 30 高于 `ACTION_APP_NOTIFICATION_SETTINGS` 要求的 26，不存在回退分支。
+     */
+    fun notificationSettings(context: Context): Intent =
+        Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+            .putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
 }

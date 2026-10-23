@@ -72,6 +72,9 @@ interface TransactionRepository {
 
     suspend fun countActiveByBook(bookId: Long): Int
 
+    /** 区间内的有效记录条数（「今天第几笔」用）。区间为闭区间，含端点。 */
+    suspend fun countActiveInRange(bookId: Long, startMs: Long, endMs: Long): Int
+
     /** 备份导出：含软删除的记录。 */
     suspend fun getAllIncludingDeleted(): List<Transaction>
 }
@@ -138,6 +141,9 @@ class TransactionRepositoryImpl @Inject constructor(
 
     override suspend fun countActiveByBook(bookId: Long): Int =
         transactionDao.countActiveByBook(bookId)
+
+    override suspend fun countActiveInRange(bookId: Long, startMs: Long, endMs: Long): Int =
+        transactionDao.countActiveInRange(bookId, startMs, endMs)
 
     override suspend fun getAllIncludingDeleted(): List<Transaction> =
         transactionDao.getAllIncludingDeleted().toTransactions()
